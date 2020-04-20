@@ -1,19 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import ReactEcharts from 'echarts-for-react';
+import jsonData from './data/All_Beauty.txt';
 
 function App() {
+
+var result = '{"asin":"B00MGK9Z8U","title":"Rimmel Provocalips 16hr Kissproof Lipstick, Kiss Fatal, 0.14 Fluid Ounce","brand":"Rimmel","main_cat":"All_Beauty","rank":"45,960inBeautyPersonalCare(","price":"$6.47","qualityScores":[1,1,0,17,0],"functionalityScores":[1,1,0,23,2],"aestheticsScores":[1,1,0,20,10]}\n{"asin":"B00MTR49IG","title":"Peter Lamas Wheatgrass Purifying Shampoo and Conditioner Set, 12 Fluid Ounce Each","brand":"Peter Lamas","main_cat":"All_Beauty","rank":"971,977inBeautyPersonalCare(","qualityScores":[7,6,0,2,0],"functionalityScores":[7,7,0,2,0],"aestheticsScores":[7,6,0,2,0]}\n{"asin":"B00N2WQ2IW","title":"Pantene Pro-V Volume Conditioner 12.0 Fluid Ounce (Product Size May Vary)","brand":"Pantene","main_cat":"All_Beauty","rank":"2,378,973inBeautyPersonalCare(","qualityScores":[9,9,0,7,1],"functionalityScores":[9,9,0,8,2],"aestheticsScores":[9,9,0,6,1]}\n{"asin":"B00NT0AR7E","title":"OZNaturals Anti Aging Retinol Serum -The Most Effective Anti Wrinkle Serum Contains Professional Strength Retinol+ Astaxanthin+ Vitamin E - Get The Dramatic Youthful Results You’ve Been Looking For","brand":"OZ Naturals","main_cat":"All_Beauty","rank":"9,905inBeautyPersonalCare(","price":"$17.95","qualityScores":[2,2,0,10,2],"functionalityScores":[2,2,0,9,1],"aestheticsScores":[2,2,0,8,1]}'
+
  var getOption = () => {
+     var qualityPosArray = result.split("\n").map(prop => JSON.parse(prop).qualityScores[1]);
+     var priceArray = result.split("\n").map(prop =>(JSON.parse(prop).price!== undefined)?parseFloat((JSON.parse(prop).price).replace("$", "")) : 0);
+     console.log(priceArray);
+     console.log(qualityPosArray);
+
     return{
       title: {
-        text: '堆叠区域图'
+        text: 'Quality Positive Score vs Price'
       },
       tooltip : {
         trigger: 'axis'
       },
       legend: {
-        data:['邮件营销','联盟广告','视频广告']
+        data:['All_Beauty']
       },
       toolbox: {
         feature: {
@@ -30,7 +38,7 @@ function App() {
         {
           type : 'category',
           boundaryGap : false,
-          data : ['周一','周二','周三','周四','周五','周六','周日']
+          data : qualityPosArray// this should be score
         }
       ],
       yAxis : [
@@ -40,29 +48,15 @@ function App() {
       ],
       series : [
         {
-          name:'邮件营销',
+          name:'All_Beauty',
           type:'line',
-          stack: '总量',
           areaStyle: {normal: {}},
-          data:[120, 132, 101, 134, 90, 230, 210]
+          data: priceArray // this should be prices
         },
-        {
-          name:'联盟广告',
-          type:'line',
-          stack: '总量',
-          areaStyle: {normal: {}},
-          data:[220, 182, 191, 234, 290, 330, 310]
-        },
-        {
-          name:'视频广告',
-          type:'line',
-          stack: '总量',
-          areaStyle: {normal: {}},
-          data:[150, 232, 201, 154, 190, 330, 410]
-        }
       ]
       }
     };
+
   return (
     <div className="App">
     <ReactEcharts
