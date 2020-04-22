@@ -81,7 +81,17 @@ var result = '{"asin":"B00MGK9Z8U","title":"Rimmel Provocalips 16hr Kissproof Li
       }
     };
 
-  return (
+    console.log(jsonData);
+    fetch(jsonData)
+        .then( r => r.text() )
+        .then(t => {
+            let a = t.split("\n");
+            a.forEach(text => {
+                console.log(JSON.parse(text))
+            })
+        });
+
+    return (
     <div className="App">
     <ReactEcharts
         option={getOption()}
